@@ -9,6 +9,9 @@
     <modules>
         <module>echo_server</module>
         <module>echo_client</module>
+        <module>rpc_api</module>
+        <module>rpc_provider</module>
+        <module>rpc_consumer</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -16,6 +19,7 @@
 
     <properties>
         <netty.version>4.1.56.Final</netty.version>
+        <springboot.version>2.2.1.RELEASE</springboot.version>
     </properties>
 
     <dependencyManagement>
@@ -25,6 +29,26 @@
                 <artifactId>netty-all</artifactId>
                 <version>${netty.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${springboot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${springboot.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${springboot.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 </project>
