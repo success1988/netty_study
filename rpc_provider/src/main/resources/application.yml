@@ -1,4 +1,4 @@
 server:
   port: 9091
   servlet:
-    context-path: /consumer
+    context-path: /provider

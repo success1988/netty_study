@@ -11,14 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version
  */
 @RestController
-@RequestMapping("/computer")
-public class ComputerController {
-
-
-
+@RequestMapping("/test")
+public class TestController {
 
     @RequestMapping("/plus")
     public int testPlus(int a, int b){
-        return a+b;
+
+        return 0;
     }
 }
