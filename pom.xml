@@ -23,6 +23,7 @@
         <httpcomponents.version>4.4.12</httpcomponents.version>
         <httpclient.version>4.5.10</httpclient.version>
         <fastjson.version>1.2.70</fastjson.version>
+        <reflections.version>0.9.10</reflections.version>
     </properties>
 
     <dependencyManagement>
@@ -97,6 +98,13 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpmime</artifactId>
                 <version>${httpclient.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

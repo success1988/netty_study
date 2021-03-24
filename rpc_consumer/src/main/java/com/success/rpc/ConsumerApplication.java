@@ -1,5 +1,6 @@
 package com.success.rpc;
 
+import com.success.rpc.annotations.EnableHttpRpcConsumer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -11,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Version
  */
 @SpringBootApplication
+@EnableHttpRpcConsumer(scanPackage = "com.success.rpc.service3")
 public class ConsumerApplication {
 
     public static void main(String[] args) {
