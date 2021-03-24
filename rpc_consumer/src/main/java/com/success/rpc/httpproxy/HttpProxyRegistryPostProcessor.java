@@ -1,6 +1,9 @@
 package com.success.rpc.httpproxy;
 
 import com.success.rpc.annotations.HttpRpcService;
+import com.success.rpc.components.MyComponent;
+import com.success.rpc.components.MyUser;
+import com.success.rpc.components.impl.MyComponentB;
 import org.reflections.Reflections;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -64,5 +67,22 @@ public class HttpProxyRegistryPostProcessor implements BeanDefinitionRegistryPos
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
 
+
+        /**
+         * 【注意】 以下代码与http rpc动态代理无关，只是用于说明BeanFactory也可以用于Spring中bean的动态注册
+         *
+         * configurableListableBeanFactory.registerResolvableDependency(MyComponent.class, new MyComponentB()); 方法，
+         * 这行代码的意思是，当有其他类要注入 MyComponent类型的对象时，就给他注入我们这里自己创建的 MyComponentB 对象
+         *
+         * 解决的同一个接口有两个bean实例的问题（除了@Primary注解，这个方式也可以解决）
+         *
+         * Consider marking one of the beans as @Primary, updating the consumer to accept multiple beans,
+         * or using @Qualifier to identify the bean that should be consumed
+         * ————————————————
+         * 版权声明：本文为CSDN博主「子♂衿」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+         * 原文链接：https://blog.csdn.net/yuge1123/article/details/106053857/
+         */
+        configurableListableBeanFactory.registerResolvableDependency(MyComponent.class, new MyComponentB());
+        configurableListableBeanFactory.registerSingleton("user", new MyUser());
     }
 }

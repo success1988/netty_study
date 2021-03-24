@@ -17,6 +17,7 @@ public class ConsumerApplication {
 
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(ConsumerApplication.class);
+        //application.setAllowBeanDefinitionOverriding(false);
         application.run(args);
     }
 

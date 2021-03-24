@@ -1,5 +1,7 @@
 package com.success.rpc.controller;
 
+import com.success.rpc.components.MyComponent;
+import com.success.rpc.components.MyUser;
 import com.success.rpc.service.ComputerService;
 import com.success.rpc.service.HelloService;
 import com.success.rpc.service2.HelloService2;
@@ -28,6 +30,10 @@ public class TestController {
     @Autowired
     private HelloService3 helloService3;
 
+    @Autowired
+    private MyUser myUser;
+    @Autowired
+    private MyComponent myComponent;
 
     @RequestMapping("/plus")
     public int testPlus(int a, int b){
@@ -36,10 +42,12 @@ public class TestController {
 
     @RequestMapping("/hello")
     public String sayHello(){
+        String name = myUser.getName()+myComponent.test();
+
         String s1 = helloService.say("早上好");
         String s2 = helloService2.say("下午好");
         String s3 = helloService3.say("晚上好");
 
-        return String.join("###",s1,s2,s3);
+        return String.join("###",name, s1,s2,s3);
     }
 }
