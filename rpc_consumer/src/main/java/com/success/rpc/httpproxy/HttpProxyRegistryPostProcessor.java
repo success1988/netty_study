@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 
 /**
- * @Title：
+ * @Title：bean的后置处理器，用于动态注册bean
  * @Author：wangchenggong
  * @Date 2021/3/23 10:13
  * @Description
@@ -36,7 +36,6 @@ public class HttpProxyRegistryPostProcessor implements BeanDefinitionRegistryPos
         registerProxyBeanByCreateBeanDefinition(beanDefinitionRegistry);
     }
 
-
     /**
      *方式1： 通过自动包扫描来实现bean注册
      * @param beanDefinitionRegistry
@@ -57,8 +56,6 @@ public class HttpProxyRegistryPostProcessor implements BeanDefinitionRegistryPos
         //将 class包装为BeanDefinition ，注册到Spring的Ioc容器中
         HttpProxyBeanDefinitionRegistryUtil.registerHttpProxyBeanDefinition(rpcClazzSet, beanDefinitionRegistry);
     }
-
-
     /**
      * 该方法的实现中，主要用来对bean定义做一些改变
      * @param configurableListableBeanFactory
@@ -66,8 +63,6 @@ public class HttpProxyRegistryPostProcessor implements BeanDefinitionRegistryPos
      */
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
-
-
         /**
          * 【注意】 以下代码与http rpc动态代理无关，只是用于说明BeanFactory也可以用于Spring中bean的动态注册
          *
