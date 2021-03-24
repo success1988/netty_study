@@ -18,8 +18,10 @@ public class HttpProxyRegistryPostProcessor implements BeanDefinitionRegistryPos
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry beanDefinitionRegistry) throws BeansException {
-        //扫描
+        //通过包扫描来实现bean注册
+        HttpProxyClassPathScanner httpProxyClassPathScanner = new HttpProxyClassPathScanner(beanDefinitionRegistry);
 
+        httpProxyClassPathScanner.doScan("com.success.rpc.service");
     }
 
     @Override

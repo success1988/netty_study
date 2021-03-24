@@ -1,4 +1,6 @@
 server:
-  port: 9091
+  port: 9092
   servlet:
     context-path: /consumer
+rpc:
+  url: http://localhost:9091/provider
