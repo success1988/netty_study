@@ -12,6 +12,9 @@
         <module>rpc_api</module>
         <module>rpc_provider</module>
         <module>rpc_consumer</module>
+        <module>netty_rpc_server</module>
+        <module>netty_rpc_consumer</module>
+        <module>netty_rpc_common</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -24,6 +27,7 @@
         <httpclient.version>4.5.10</httpclient.version>
         <fastjson.version>1.2.70</fastjson.version>
         <reflections.version>0.9.10</reflections.version>
+        <curator.version>2.10.0</curator.version>
     </properties>
 
     <dependencyManagement>
@@ -106,6 +110,14 @@
                 <artifactId>reflections</artifactId>
                 <version>${reflections.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-framework</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 </project>
