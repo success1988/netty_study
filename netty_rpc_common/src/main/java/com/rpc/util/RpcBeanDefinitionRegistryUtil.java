@@ -1,9 +1,12 @@
 package com.rpc.util;
 
+import com.rpc.registrar.ConsumerProxyFactoryBean;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Set;
 
@@ -17,45 +20,33 @@ import java.util.Set;
 public class RpcBeanDefinitionRegistryUtil {
 
 
-    /**
-     * 将 消费者class包装为BeanDefinition ，注册到Spring的Ioc容器中
-     * @param consumerClazzSet
-     * @param registry
-     */
-    public static void registerConsumerBeanDefinition(Set<Class<?>> consumerClazzSet, BeanDefinitionRegistry registry){
 
-        for (Class<?> targetClazz : consumerClazzSet) {
+
+    public static void registerRpcBeanDefinition(Set<Class<?>> rpcClazzSet, BeanDefinitionRegistry registry){
+        registerRpcBeanDefinition(rpcClazzSet, registry,null);
+    }
+
+    public static void registerRpcBeanDefinition(Set<Class<?>> rpcClazzSet, BeanDefinitionRegistry registry, Class<? extends FactoryBean> factoryBeanClazz){
+        if(CollectionUtils.isEmpty(rpcClazzSet)){
+            throw new RuntimeException("bean注册发生异常:没有可注册的Class");
+        }
+
+        for (Class<?> targetClazz : rpcClazzSet) {
             BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(targetClazz);
             GenericBeanDefinition definition = (GenericBeanDefinition) beanDefinitionBuilder.getRawBeanDefinition();
-            //设置构造方法的参数  对于Class<?>,既可以设置为Class,也可以传Class的完全类名
-            //definition.getConstructorArgumentValues().addGenericArgumentValue(targetClazz);
-            definition.getConstructorArgumentValues().addGenericArgumentValue(targetClazz.getName());
-
-            //Bean的类型，指定为某个代理接口的类型
-            //definition.setBeanClass(HttpProxyFactoryBean.class);
+            if(factoryBeanClazz != null){
+                //指定为对应的FactoryBean类型
+                definition.setBeanClass(factoryBeanClazz);
+                //为FactoryBean的构造方法入参赋值
+                definition.getPropertyValues().add("rpcConsumerClazz", targetClazz);
+            }else{
+                //Bean的类型，指定为某个代理接口的类型
+                definition.setBeanClass(targetClazz);
+            }
             //表示 根据代理接口的类型来自动装配
             definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
             registry.registerBeanDefinition(targetClazz.getName(),definition);
         }
+
     }
-
-
-    /**
-     * 将 生产者class包装为BeanDefinition ，注册到Spring的Ioc容器中
-     * @param providerClazzSet
-     * @param registry
-     */
-    public static void registerProviderBeanDefinition(Set<Class<?>> providerClazzSet, BeanDefinitionRegistry registry){
-
-        for (Class<?> targetClazz : providerClazzSet) {
-            BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(targetClazz);
-            GenericBeanDefinition definition = (GenericBeanDefinition) beanDefinitionBuilder.getRawBeanDefinition();
-            //Bean的类型，指定为某个代理接口的类型
-            definition.setBeanClass(targetClazz);
-            //表示 根据代理接口的类型来自动装配
-            definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
-            registry.registerBeanDefinition(targetClazz.getName(),definition);
-        }
-    }
-
 }

@@ -1,0 +1,7 @@
+server:
+  port: 9082
+  servlet:
+    context-path: /consumer
+rpc:
+  server:
+    address: localhost:19081

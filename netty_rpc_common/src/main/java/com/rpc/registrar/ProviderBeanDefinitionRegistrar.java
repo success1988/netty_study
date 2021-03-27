@@ -4,7 +4,7 @@ import com.rpc.annotations.EnableRpcProvider;
 import com.rpc.annotations.RpcProvider;
 import com.rpc.netty.server.NettyServer;
 import com.rpc.netty.server.NettyServerHandler;
-import com.rpc.util.AnnotationScanner;
+import com.rpc.util.ClazzScanner;
 import com.rpc.util.RpcBeanDefinitionRegistryUtil;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @Title：
+ * @Title：服务提供方bean注册器
  * @Author：wangchenggong
  * @Date 2021/3/26 16:39
  * @Description
@@ -33,7 +33,7 @@ public class ProviderBeanDefinitionRegistrar implements ImportBeanDefinitionRegi
         Map<String, Object> annotationAttributes = importingClassMetadata
                 .getAnnotationAttributes(EnableRpcProvider.class.getName());
         String[] scanPackages = (String[])annotationAttributes.get("scanPackages");
-        Set<Class<?>> rpcProviderClazzSet = AnnotationScanner.scanClassWithAnnotation(scanPackages, RpcProvider.class);
+        Set<Class<?>> rpcProviderClazzSet = ClazzScanner.scanClassWithAnnotation(scanPackages, RpcProvider.class);
 
         /**
          * 2.【注册netty Server】
@@ -48,7 +48,7 @@ public class ProviderBeanDefinitionRegistrar implements ImportBeanDefinitionRegi
          */
         rpcProviderClazzSet.add(NettyServerHandler.class);
 
-        RpcBeanDefinitionRegistryUtil.registerProviderBeanDefinition(rpcProviderClazzSet, registry);
+        RpcBeanDefinitionRegistryUtil.registerRpcBeanDefinition(rpcProviderClazzSet, registry);
     }
 
 

@@ -1,5 +1,6 @@
 package com.rpc.netty.server;
 
+import com.google.common.net.HostAndPort;
 import com.rpc.annotations.RpcProvider;
 import com.rpc.netty.common.JsonDecoder;
 import com.rpc.netty.common.JsonEncoder;
@@ -85,11 +86,9 @@ public class NettyServer implements ApplicationContextAware, InitializingBean {
                             }
                         });
 
-                String[] array = serverAddress.split(":");
-                String host = array[0];
-                int port = Integer.parseInt(array[1]);
-                ChannelFuture cf = bootstrap.bind(host,port).sync();
-                logger.info("RPC 服务器启动.监听端口:"+port);
+                HostAndPort hostAndPort = HostAndPort.fromString(serverAddress);
+                ChannelFuture cf = bootstrap.bind(hostAndPort.getHostText(),hostAndPort.getPort()).sync();
+                logger.info("RPC 服务器启动.监听端口:"+hostAndPort.getPort());
                 //等待服务端监听端口关闭
                 cf.channel().closeFuture().sync();
             } catch (Exception e) {

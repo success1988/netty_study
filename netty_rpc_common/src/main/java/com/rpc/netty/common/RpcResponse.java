@@ -4,7 +4,7 @@ public class RpcResponse {
 
 	private String requestId;
 	private int code;
-	private String error_msg;
+	private String errorMsg;
 	private Object data;
 
 	public String getRequestId() {
@@ -19,12 +19,15 @@ public class RpcResponse {
 	public void setCode(int code) {
 		this.code = code;
 	}
-	public String getError_msg() {
-		return error_msg;
+
+	public String getErrorMsg() {
+		return errorMsg;
 	}
-	public void setError_msg(String error_msg) {
-		this.error_msg = error_msg;
+
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
 	}
+
 	public Object getData() {
 		return data;
 	}

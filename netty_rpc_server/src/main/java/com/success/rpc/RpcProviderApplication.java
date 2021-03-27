@@ -13,10 +13,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 @EnableRpcProvider(scanPackages = {"com.success.rpc.service"})
-public class RpcServerApplication {
+public class RpcProviderApplication {
 
     public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(RpcServerApplication.class);
+        SpringApplication application = new SpringApplication(RpcProviderApplication.class);
         application.run(args);
     }
 
