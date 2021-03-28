@@ -25,18 +25,6 @@ public class ConsumerBeanDefinitionRegistrar implements ImportBeanDefinitionRegi
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
 
-        //1.注册消费者代理工厂Bean： 可以自动装配到其他bean中，可以像操作其他serviceBean一样，方便使用
-        Map<String, Object> annotationAttributes = importingClassMetadata.getAnnotationAttributes(EnableRpcConsumer.class.getName());
-        String[] scanPackages = (String[])annotationAttributes.get("scanPackages");
-        Set<Class<?>> consumerClazzSet = ClazzScanner.scanInterfaces(scanPackages);
-        RpcBeanDefinitionRegistryUtil.registerRpcBeanDefinition(consumerClazzSet, registry, ConsumerProxyFactoryBean.class);
-
-        //2.注册方法拦截器:
-        /**
-         *         正常来说，nettyClient发送消息，NettyClientHandler异步读取消息， 但是
-         *         这里做了【异步转同步】，所以可以认为是Netty发送消息方法是同步的，
-         *         所以只需要让方法拦截器依赖nettyClient即可
-         */
         Set<Class<?>> needBeans = new HashSet<>();
 
 
@@ -50,5 +38,20 @@ public class ConsumerBeanDefinitionRegistrar implements ImportBeanDefinitionRegi
         needBeans.add(ConsumerProxyMethodInterceptor.class);
 
         RpcBeanDefinitionRegistryUtil.registerRpcBeanDefinition(needBeans, registry);
+
+
+        //1.注册消费者代理工厂Bean： 可以自动装配到其他bean中，可以像操作其他serviceBean一样，方便使用
+        Map<String, Object> annotationAttributes = importingClassMetadata.getAnnotationAttributes(EnableRpcConsumer.class.getName());
+        String[] scanPackages = (String[])annotationAttributes.get("scanPackages");
+        Set<Class<?>> consumerClazzSet = ClazzScanner.scanInterfaces(scanPackages);
+        RpcBeanDefinitionRegistryUtil.registerRpcBeanDefinition(consumerClazzSet, registry, ConsumerProxyFactoryBean.class);
+
+        //2.注册方法拦截器:
+        /**
+         *         正常来说，nettyClient发送消息，NettyClientHandler异步读取消息， 但是
+         *         这里做了【异步转同步】，所以可以认为是Netty发送消息方法是同步的，
+         *         所以只需要让方法拦截器依赖nettyClient即可
+         */
+
     }
 }

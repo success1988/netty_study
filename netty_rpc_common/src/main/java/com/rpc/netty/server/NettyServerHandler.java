@@ -98,7 +98,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
-    @Override
+   /* @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt)throws Exception {
         if (evt instanceof IdleStateEvent){
             IdleStateEvent event = (IdleStateEvent)evt;
@@ -109,7 +109,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         }else{
             super.userEventTriggered(ctx,evt);
         }
-    }
+    }*/
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)   {

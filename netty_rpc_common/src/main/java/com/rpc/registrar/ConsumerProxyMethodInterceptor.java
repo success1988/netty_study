@@ -37,38 +37,29 @@ public class ConsumerProxyMethodInterceptor implements MethodInterceptor {
         //1.封装请求
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setId(IdGenerator.buildUUID());
-        rpcRequest.setClassName(method.getClass().getName());
+        rpcRequest.setClassName(method.getDeclaringClass().getName());
         rpcRequest.setMethodName(method.getName());
-
-        if(objects != null && objects.length > 0){
-            Class<?>[] parameterTypes = new Class<?>[objects.length];
-            for (int i = 0; i < objects.length; i++) {
-                //FIXME 基本数据类型的Class获取
-                parameterTypes[i] = objects[i].getClass();
-            }
-            rpcRequest.setParameterTypes(parameterTypes);
-            rpcRequest.setParameters(objects);
-        }
-
+        rpcRequest.setParameterTypes(method.getParameterTypes());
+        rpcRequest.setParameters(objects);
 
         //2.发送请求
         logger.info(">>>发送请求,请求内容为:{}",JSON.toJSONString(rpcRequest));
-        RpcResponse result = (RpcResponse)nettyClient.send(rpcRequest);
-        logger.info("<<<接收响应,响应内容为:{}",JSON.toJSONString(result));
+        RpcResponse rpcResponse =  (RpcResponse)nettyClient.send(rpcRequest);
+        logger.info("<<<接收响应,响应内容为:{}",JSON.toJSONString(rpcResponse));
 
         //3.解析响应结果
-        int code = result.getCode();
+        int code = rpcResponse.getCode();
         if(code != 0){
-            logger.error("请求处理发生异常,请求id为:{},异常原因:{}",result.getRequestId(), result.getErrorMsg());
-            throw new RuntimeException(String.format("请求处理发生异常,请求id为:%s,异常原因:%s" ,result.getRequestId(),result.getErrorMsg()));
+            logger.error("请求处理发生异常,请求id为:{},异常原因:{}",rpcResponse.getRequestId(), rpcResponse.getErrorMsg());
+            throw new RuntimeException(String.format("请求处理发生异常,请求id为:%s,异常原因:%s" ,rpcResponse.getRequestId(),rpcResponse.getErrorMsg()));
         }
 
         Class<?> returnType = method.getReturnType();
         if(returnType.isPrimitive()){
             //FIXME 基本类型数据转换
-            return result.getData();
+            return rpcResponse.getData();
         }else{
-            return JSONObject.parseObject(JSON.toJSONString(result.getData()),returnType);
+            return JSONObject.parseObject(JSON.toJSONString(rpcResponse.getData()),returnType);
         }
     }
 

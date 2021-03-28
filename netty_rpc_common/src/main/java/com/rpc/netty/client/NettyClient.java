@@ -98,7 +98,7 @@ public class NettyClient implements InitializingBean {
             RpcResponse res = new RpcResponse();
             res.setCode(1);
             res.setErrorMsg("未正确连接到服务器.请检查相关配置信息!");
-            return JSONArray.toJSONString(res);
+            return res;
         }
     }
 

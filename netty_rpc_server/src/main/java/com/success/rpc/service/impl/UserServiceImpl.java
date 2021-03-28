@@ -4,7 +4,9 @@ import com.rpc.annotations.RpcProvider;
 import com.success.rpc.domain.User;
 import com.success.rpc.service.UserService;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * @Title：
@@ -15,18 +17,25 @@ import java.util.List;
  */
 @RpcProvider
 public class UserServiceImpl implements UserService {
+
+    private ConcurrentHashMap<Long,User> userMap = new ConcurrentHashMap<>();
+    private LongAdder longAdder = new LongAdder();
+
     @Override
     public boolean saveUser(User user) {
-        return false;
+        longAdder.add(1);
+        user.setId(longAdder.longValue());
+        userMap.put(user.getId(), user);
+        return true;
     }
 
     @Override
     public List<User> selectAllUsers() {
-        return null;
+        return new ArrayList<>(userMap.values());
     }
 
     @Override
     public User selectById(Long id) {
-        return null;
+        return userMap.get(id);
     }
 }
