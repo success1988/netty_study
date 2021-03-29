@@ -23,11 +23,7 @@ public class ProviderBeanDefinitionRegistrar implements ImportBeanDefinitionRegi
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
 
-        /**
-         * 【注册@RpcProvider的服务】
-         * 找到指定包(@EnableRpcProvider)下 带有注解@RpcProvider的服务，注册 serveice的bean到Spring容器中
-         */
-        //扫描注解
+        //找到指定包(@EnableRpcProvider)中的scanPackages属性
         Map<String, Object> annotationAttributes = importingClassMetadata
                 .getAnnotationAttributes(EnableRpcProvider.class.getName());
         String[] scanPackages = (String[])annotationAttributes.get("scanPackages");
@@ -36,6 +32,8 @@ public class ProviderBeanDefinitionRegistrar implements ImportBeanDefinitionRegi
         ClassPathBeanDefinitionScanner beanScanner = new ClassPathBeanDefinitionScanner(registry);
         String[] serverPackages = Arrays.copyOf(scanPackages, scanPackages.length + 1);
         serverPackages[scanPackages.length] = NettyServer.class.getPackage().getName();
+
+        //注入spring的Ioc容器
         beanScanner.scan(serverPackages);
     }
 

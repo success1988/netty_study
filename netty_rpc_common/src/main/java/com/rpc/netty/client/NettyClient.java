@@ -1,18 +1,13 @@
 package com.rpc.netty.client;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.google.common.net.HostAndPort;
-import com.rpc.netty.common.JsonDecoder;
-import com.rpc.netty.common.JsonEncoder;
-import com.rpc.netty.common.RpcRequest;
-import com.rpc.netty.common.RpcResponse;
+import com.rpc.netty.common.*;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -55,7 +50,6 @@ public class NettyClient implements InitializingBean {
                     @Override
                     protected void initChannel(SocketChannel channel) throws Exception {
                         ChannelPipeline pipeline = channel.pipeline();
-                        pipeline.addLast(new IdleStateHandler(0, 0, 30));
                         pipeline.addLast(new JsonEncoder());
                         pipeline.addLast(new JsonDecoder());
                         pipeline.addLast("handler",nettyClientHandler);
@@ -98,8 +92,7 @@ public class NettyClient implements InitializingBean {
             return result;
         }else{
             RpcResponse res = new RpcResponse();
-            res.setCode(1);
-            res.setErrorMsg("未正确连接到服务器.请检查相关配置信息!");
+            res.setCodeMsg(CodeMsgEnum.CHANNEL_EXCEPTION);
             return res;
         }
     }

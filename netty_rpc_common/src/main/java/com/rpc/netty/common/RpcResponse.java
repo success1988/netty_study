@@ -1,10 +1,21 @@
 package com.rpc.netty.common;
 
 public class RpcResponse {
-
+	/**
+	 * 请求id
+	 */
 	private String requestId;
+	/**
+	 * rpc调用失败的状态码
+	 */
 	private int code;
+	/**
+	 * rpc调用失败的原因
+	 */
 	private String errorMsg;
+	/**
+	 * 响应数据
+	 */
 	private Object data;
 
 	public String getRequestId() {

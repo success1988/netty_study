@@ -81,7 +81,6 @@ public class NettyServer implements ApplicationContextAware, InitializingBean {
                             @Override
                             protected void initChannel(SocketChannel channel) throws Exception {
                                 ChannelPipeline pipeline = channel.pipeline();
-                                pipeline.addLast(new IdleStateHandler(0, 0, 60));
                                 pipeline.addLast(new JsonEncoder());
                                 pipeline.addLast(new JsonDecoder());
                                 pipeline.addLast(handler);
@@ -94,7 +93,7 @@ public class NettyServer implements ApplicationContextAware, InitializingBean {
                 //等待服务端监听端口关闭
                 cf.channel().closeFuture().sync();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("RPC 服务器启动发生异常", e);
                 bossGroup.shutdownGracefully();
                 workerGroup.shutdownGracefully();
             }

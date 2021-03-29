@@ -2,11 +2,26 @@ package com.rpc.netty.common;
 
 public class RpcRequest {
 
+	/**
+	 * 请求id
+	 */
 	private String id;
-	private String className;// 类名
-	private String methodName;// 函数名称
-	private Class<?>[] parameterTypes;// 参数类型
-	private Object[] parameters;// 参数列表
+	/**
+	 * 类名
+	 */
+	private String className;
+	/**
+	 * 函数名称
+	 */
+	private String methodName;
+	/**
+	 * 参数类型
+	 */
+	private Class<?>[] parameterTypes;
+	/**
+	 * 参数列表
+	 */
+	private Object[] parameters;
 
 
 	public String getId() {
