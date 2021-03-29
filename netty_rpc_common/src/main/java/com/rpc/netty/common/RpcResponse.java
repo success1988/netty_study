@@ -34,4 +34,9 @@ public class RpcResponse {
 	public void setData(Object data) {
 		this.data = data;
 	}
+
+	public void setCodeMsg(CodeMsgEnum codeMsg){
+		this.code = codeMsg.getCode();
+		this.errorMsg = codeMsg.getErrorMsg();
+	}
 }

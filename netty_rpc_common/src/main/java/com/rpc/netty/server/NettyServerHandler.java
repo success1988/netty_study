@@ -2,6 +2,7 @@ package com.rpc.netty.server;
 
 import com.alibaba.fastjson.JSON;
 
+import com.rpc.netty.common.CodeMsgEnum;
 import com.rpc.netty.common.RpcRequest;
 import com.rpc.netty.common.RpcResponse;
 import io.netty.channel.ChannelHandler;
@@ -49,13 +50,10 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
             Object result = this.handler(request);
             response.setData(result);
         } catch (Throwable e) {
-            e.printStackTrace();
-            response.setCode(1);
-            response.setErrorMsg(e.toString());
+            response.setCodeMsg(CodeMsgEnum.INTERNAL_SERVER_ERROR.fillArg(e.getMessage()));
             logger.error("RPC Server handle request error",e);
         }
         ctx.writeAndFlush(response);
-
     }
 
     /**
@@ -94,11 +92,17 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         }else{
             Object[] new_parameters = new Object[parameters.length];
             for(int i=0;i<parameters.length;i++){
-                new_parameters[i] = JSON.parseObject(parameters[i].toString(),parameterTypes[i]);
+                if(parameterTypes[i] == String.class || parameterTypes[i].isPrimitive()){
+                    new_parameters[i] = parameters[i];
+                }else{
+                    new_parameters[i] = JSON.parseObject(parameters[i].toString(),parameterTypes[i]);
+                }
             }
             return new_parameters;
         }
     }
+
+
 
    /* @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt)throws Exception {

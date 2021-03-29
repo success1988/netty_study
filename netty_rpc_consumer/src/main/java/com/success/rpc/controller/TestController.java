@@ -46,6 +46,7 @@ public class TestController {
         user2.setEmail("xiaohong@163.com");
         boolean addResult2 = userService.saveUser(user2);
 
+        userService.say("success", 32);
 
         List<User> users = userService.selectAllUsers();
         User targetUser = userService.selectById(1L);

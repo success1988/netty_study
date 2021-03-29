@@ -2,6 +2,7 @@ package com.rpc.netty.client;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.rpc.netty.common.CodeMsgEnum;
 import com.rpc.netty.common.RpcRequest;
 import com.rpc.netty.common.RpcResponse;
 import com.rpc.util.IdGenerator;
@@ -50,14 +51,15 @@ public class ConsumerProxyMethodInterceptor implements MethodInterceptor {
 
         //3.解析响应结果
         int code = rpcResponse.getCode();
-        if(code != 0){
+        if(code != CodeMsgEnum.SUCCESS.getCode()){
             logger.error("请求处理发生异常,请求id为:{},异常原因:{}",rpcResponse.getRequestId(), rpcResponse.getErrorMsg());
             throw new RuntimeException(String.format("请求处理发生异常,请求id为:%s,异常原因:%s" ,rpcResponse.getRequestId(),rpcResponse.getErrorMsg()));
         }
 
         Class<?> returnType = method.getReturnType();
-        if(returnType.isPrimitive()){
-            //FIXME 基本类型数据转换
+        if(returnType == void.class){
+            return null;
+        }else if(returnType.isPrimitive() || returnType == String.class){
             return rpcResponse.getData();
         }else{
             return JSONObject.parseObject(JSON.toJSONString(rpcResponse.getData()),returnType);

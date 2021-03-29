@@ -32,4 +32,11 @@ public interface UserService {
      * @return
      */
     User selectById(Long id);
+
+    /**
+     * 自我介绍
+     * @param name
+     * @param age
+     */
+    void say(String name, int age);
 }
