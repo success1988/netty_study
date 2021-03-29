@@ -1,12 +1,10 @@
-package com.rpc.registrar;
+package com.rpc.netty.client;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.DependsOn;
 
 /**
  * @Title：用于创建消费者代理对象的工厂bean
@@ -15,13 +13,13 @@ import org.springframework.context.annotation.DependsOn;
  * @Description
  * @Version
  */
-public class ConsumerProxyFactoryBean<T> implements FactoryBean<T> , ApplicationContextAware {
+public class ConsumerProxyFactoryBean<T> implements FactoryBean<T>, ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
     private Class<T> rpcConsumerClazz;
 
-    public void setRpcConsumerClazz(Class<T> rpcConsumerClazz) {
+    private ConsumerProxyFactoryBean(Class<T> rpcConsumerClazz){
         this.rpcConsumerClazz = rpcConsumerClazz;
     }
 
@@ -29,7 +27,6 @@ public class ConsumerProxyFactoryBean<T> implements FactoryBean<T> , Application
     public T getObject() throws Exception {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(rpcConsumerClazz);
-        //enhancer.setCallback(consumerProxyMethodInterceptor);
         enhancer.setCallback(applicationContext.getBean(ConsumerProxyMethodInterceptor.class));
         return (T) enhancer.create();
     }

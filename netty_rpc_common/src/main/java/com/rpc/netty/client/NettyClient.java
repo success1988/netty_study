@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
 import java.net.InetSocketAddress;
@@ -25,12 +26,13 @@ import java.net.SocketAddress;
 import java.util.concurrent.SynchronousQueue;
 
 /**
- * @Title：
+ * @Title：netty网络通信客户端
  * @Author：wangchenggong
  * @Date 2021/3/26 16:52
  * @Description
  * @Version
  */
+@Component
 public class NettyClient implements InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(NettyClient.class);
 

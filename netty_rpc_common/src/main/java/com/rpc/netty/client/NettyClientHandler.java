@@ -9,6 +9,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.SynchronousQueue;
@@ -20,6 +21,7 @@ import java.util.concurrent.SynchronousQueue;
  * @Description
  * @Version
  */
+@Component
 @ChannelHandler.Sharable
 public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 

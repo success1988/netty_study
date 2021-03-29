@@ -1,8 +1,7 @@
-package com.rpc.registrar;
+package com.rpc.netty.client;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.rpc.netty.client.NettyClient;
 import com.rpc.netty.common.RpcRequest;
 import com.rpc.netty.common.RpcResponse;
 import com.rpc.util.IdGenerator;
@@ -11,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 
@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
  * @Description
  * @Version
  */
+@Component
 public class ConsumerProxyMethodInterceptor implements MethodInterceptor {
 
     private final Logger logger = LoggerFactory.getLogger(ConsumerProxyMethodInterceptor.class);

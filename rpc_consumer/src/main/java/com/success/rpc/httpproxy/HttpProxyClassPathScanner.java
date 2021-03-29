@@ -61,6 +61,7 @@ public class HttpProxyClassPathScanner extends ClassPathBeanDefinitionScanner {
         return beanDefinitions;
     }
 
+    @Override
     protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
         return beanDefinition.getMetadata().isInterface() && beanDefinition.getMetadata().isIndependent();
     }

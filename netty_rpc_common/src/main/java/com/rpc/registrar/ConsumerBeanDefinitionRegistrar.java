@@ -1,15 +1,18 @@
 package com.rpc.registrar;
 
 import com.rpc.annotations.EnableRpcConsumer;
+import com.rpc.netty.client.ConsumerProxyFactoryBean;
 import com.rpc.netty.client.NettyClient;
-import com.rpc.netty.client.NettyClientHandler;
 import com.rpc.util.ClazzScanner;
-import com.rpc.util.RpcBeanDefinitionRegistryUtil;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.util.CollectionUtils;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,34 +27,32 @@ public class ConsumerBeanDefinitionRegistrar implements ImportBeanDefinitionRegi
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-
-        Set<Class<?>> needBeans = new HashSet<>();
-
-
-
-        //3.注册Netty Client: 用于创建网络连接； 用于发送网络请求，请求前会做序列化操作
-        needBeans.add(NettyClient.class);
-
-        //4.注册Netty Client Handler: 收到网络请求后的反序列化操作
-        needBeans.add(NettyClientHandler.class);
-
-        needBeans.add(ConsumerProxyMethodInterceptor.class);
-
-        RpcBeanDefinitionRegistryUtil.registerRpcBeanDefinition(needBeans, registry);
+        //扫描客户端组件（netty client相关类）注册到spring中
+        ClassPathBeanDefinitionScanner beanScanner = new ClassPathBeanDefinitionScanner(registry);
+        beanScanner.scan(NettyClient.class.getPackage().getName());
 
 
-        //1.注册消费者代理工厂Bean： 可以自动装配到其他bean中，可以像操作其他serviceBean一样，方便使用
+        //注册消费者代理工厂Bean： 可以自动装配到其他bean中，可以像操作其他serviceBean一样，方便使用
         Map<String, Object> annotationAttributes = importingClassMetadata.getAnnotationAttributes(EnableRpcConsumer.class.getName());
         String[] scanPackages = (String[])annotationAttributes.get("scanPackages");
         Set<Class<?>> consumerClazzSet = ClazzScanner.scanInterfaces(scanPackages);
-        RpcBeanDefinitionRegistryUtil.registerRpcBeanDefinition(consumerClazzSet, registry, ConsumerProxyFactoryBean.class);
 
-        //2.注册方法拦截器:
-        /**
-         *         正常来说，nettyClient发送消息，NettyClientHandler异步读取消息， 但是
-         *         这里做了【异步转同步】，所以可以认为是Netty发送消息方法是同步的，
-         *         所以只需要让方法拦截器依赖nettyClient即可
-         */
+        if(CollectionUtils.isEmpty(consumerClazzSet)){
+            throw new RuntimeException("bean注册发生异常:没有可注册的Class");
+        }
 
+        for (Class<?> targetClazz : consumerClazzSet) {
+            BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(targetClazz);
+            GenericBeanDefinition definition = (GenericBeanDefinition) beanDefinitionBuilder.getRawBeanDefinition();
+
+            //指定为对应的FactoryBean类型
+            definition.setBeanClass(ConsumerProxyFactoryBean.class);
+            //为FactoryBean的构造方法入参赋值
+            definition.getConstructorArgumentValues().addGenericArgumentValue(targetClazz);
+
+            //表示 根据代理接口的类型来自动装配
+            definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
+            registry.registerBeanDefinition(targetClazz.getName(),definition);
+        }
     }
 }

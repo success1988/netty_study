@@ -17,17 +17,19 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Title：
+ * @Title：netty网络通信服务端
  * @Author：wangchenggong
  * @Date 2021/3/26 16:51
  * @Description
  * @Version
  */
+@Component
 public class NettyServer implements ApplicationContextAware, InitializingBean {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
