@@ -1,4 +1,4 @@
-package com.rpc.netty.common;
+package com.rpc.common;
 
 public class RpcRequest {
 

@@ -1,15 +1,13 @@
-package com.rpc.netty.server;
+package com.rpc.server;
 
 import com.alibaba.fastjson.JSON;
 
-import com.rpc.netty.common.CodeMsgEnum;
-import com.rpc.netty.common.RpcRequest;
-import com.rpc.netty.common.RpcResponse;
+import com.rpc.common.CodeMsgEnum;
+import com.rpc.common.RpcRequest;
+import com.rpc.common.RpcResponse;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.timeout.IdleState;
-import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

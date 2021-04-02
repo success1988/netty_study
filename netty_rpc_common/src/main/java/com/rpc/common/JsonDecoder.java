@@ -1,4 +1,4 @@
-package com.rpc.netty.common;
+package com.rpc.common;
 
 import com.alibaba.fastjson.JSON;
 import io.netty.buffer.ByteBuf;

@@ -1,7 +1,7 @@
 package com.rpc.registrar;
 
 import com.rpc.annotations.EnableRpcProvider;
-import com.rpc.netty.server.NettyServer;
+import com.rpc.server.NettyServer;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;

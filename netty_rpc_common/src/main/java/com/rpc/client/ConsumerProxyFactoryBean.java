@@ -1,4 +1,4 @@
-package com.rpc.netty.client;
+package com.rpc.client;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;

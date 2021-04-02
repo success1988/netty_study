@@ -5,3 +5,5 @@ server:
 rpc:
   server:
     address: localhost:19081
+  registry:
+    address: localhost:2181

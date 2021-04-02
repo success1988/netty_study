@@ -1,8 +1,8 @@
-package com.rpc.netty.client;
+package com.rpc.client;
 
 import com.alibaba.fastjson.JSON;
-import com.rpc.netty.common.RpcRequest;
-import com.rpc.netty.common.RpcResponse;
+import com.rpc.common.RpcRequest;
+import com.rpc.common.RpcResponse;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;

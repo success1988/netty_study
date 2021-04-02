@@ -1,4 +1,4 @@
-package com.rpc.netty.common;
+package com.rpc.common;
 
 /**
  * @Title：响应码枚举类

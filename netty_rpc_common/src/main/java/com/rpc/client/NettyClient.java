@@ -1,8 +1,8 @@
-package com.rpc.netty.client;
+package com.rpc.client;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.net.HostAndPort;
-import com.rpc.netty.common.*;
+import com.rpc.common.*;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;

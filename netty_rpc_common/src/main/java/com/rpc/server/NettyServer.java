@@ -1,15 +1,14 @@
-package com.rpc.netty.server;
+package com.rpc.server;
 
 import com.google.common.net.HostAndPort;
 import com.rpc.annotations.RpcProvider;
-import com.rpc.netty.common.JsonDecoder;
-import com.rpc.netty.common.JsonEncoder;
+import com.rpc.common.JsonDecoder;
+import com.rpc.common.JsonEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;

@@ -1,10 +1,10 @@
-package com.rpc.netty.client;
+package com.rpc.client;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.rpc.netty.common.CodeMsgEnum;
-import com.rpc.netty.common.RpcRequest;
-import com.rpc.netty.common.RpcResponse;
+import com.rpc.common.CodeMsgEnum;
+import com.rpc.common.RpcRequest;
+import com.rpc.common.RpcResponse;
 import com.rpc.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
