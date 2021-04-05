@@ -8,6 +8,8 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +78,21 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 
         channel.writeAndFlush(request);
         return resultQueue;
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        logger.info("已超过30秒未与RPC服务器进行读写操作!将发送心跳消息...");
+        if(evt instanceof IdleStateEvent){
+            IdleStateEvent event = (IdleStateEvent)evt;
+            if (event.state()== IdleState.ALL_IDLE){
+                RpcRequest request = new RpcRequest();
+                request.setMethodName("heartBeat");
+                ctx.channel().writeAndFlush(request);
+            }
+        }else{
+            super.userEventTriggered(ctx, evt);
+        }
     }
 
     @Override

@@ -8,6 +8,8 @@ import com.rpc.common.RpcResponse;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -41,17 +43,21 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg)   {
         RpcRequest request = JSON.parseObject(msg.toString(), RpcRequest.class);
 
-        logger.info("RPC客户端请求接口:"+request.getClassName()+"   方法名:"+request.getMethodName());
-        RpcResponse response = new RpcResponse();
-        response.setRequestId(request.getId());
-        try {
-            Object result = this.handler(request);
-            response.setData(result);
-        } catch (Throwable e) {
-            response.setCodeMsg(CodeMsgEnum.INTERNAL_SERVER_ERROR.fillArg(e.getMessage()));
-            logger.error("RPC Server handle request error",e);
+        if ("heartBeat".equals(request.getMethodName())) {
+            logger.info("客户端心跳信息..."+ctx.channel().remoteAddress());
+        }else {
+            logger.info("RPC客户端请求接口:"+request.getClassName()+"   方法名:"+request.getMethodName());
+            RpcResponse response = new RpcResponse();
+            response.setRequestId(request.getId());
+            try {
+                Object result = this.handler(request);
+                response.setData(result);
+            } catch (Throwable e) {
+                response.setCodeMsg(CodeMsgEnum.INTERNAL_SERVER_ERROR.fillArg(e.getMessage()));
+                logger.error("RPC Server handle request error",e);
+            }
+            ctx.writeAndFlush(response);
         }
-        ctx.writeAndFlush(response);
     }
 
     /**
@@ -102,7 +108,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
 
 
-   /* @Override
+   @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt)throws Exception {
         if (evt instanceof IdleStateEvent){
             IdleStateEvent event = (IdleStateEvent)evt;
@@ -113,7 +119,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         }else{
             super.userEventTriggered(ctx,evt);
         }
-    }*/
+    }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)   {

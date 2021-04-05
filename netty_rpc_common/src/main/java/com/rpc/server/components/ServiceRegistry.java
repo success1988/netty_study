@@ -31,7 +31,7 @@ public class ServiceRegistry implements InitializingBean {
     private CuratorFramework client = null;
     @Value("${rpc.server.address}")
     private String providerAddress;
-    @Value("${rpc.registry.host}")
+    @Value("${rpc.registry.address}")
     private String registryHost;
     @Value("${rpc.registry.path}")
     private String registryPath;

@@ -1,10 +1,10 @@
 server:
-  port: 9081
+  port: 9083
   servlet:
     context-path: /provider
 rpc:
   server:
-    address: localhost:19081
+    address: localhost:19083
   registry:
-    host: localhost:2181
+    address: localhost:2181
     path: /rpc/service/cluster

@@ -9,6 +9,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -50,6 +51,7 @@ public class NettyClient{
                     @Override
                     protected void initChannel(SocketChannel channel) throws Exception {
                         ChannelPipeline pipeline = channel.pipeline();
+                        pipeline.addLast(new IdleStateHandler(0, 0, 30));
                         pipeline.addLast(new JsonEncoder());
                         pipeline.addLast(new JsonDecoder());
                         pipeline.addLast("handler",nettyClientHandler);

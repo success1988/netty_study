@@ -35,7 +35,7 @@ public class ServiceDiscovery {
      */
     private CuratorFramework client = null;
     private TreeCache treeCache;
-    @Value("${rpc.registry.host}")
+    @Value("${rpc.registry.address}")
     private String registryHost;
     @Value("${rpc.registry.path}")
     private String registryPath;
