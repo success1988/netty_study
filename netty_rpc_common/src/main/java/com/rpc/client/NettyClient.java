@@ -2,6 +2,7 @@ package com.rpc.client;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.net.HostAndPort;
+import com.rpc.client.connection.ConnectionManager;
 import com.rpc.common.*;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -28,17 +29,16 @@ import java.util.concurrent.SynchronousQueue;
  * @Version
  */
 @Component
-public class NettyClient implements InitializingBean {
+public class NettyClient{
     private static final Logger logger = LoggerFactory.getLogger(NettyClient.class);
 
     private EventLoopGroup group = new NioEventLoopGroup(1);
     private Bootstrap bootstrap = new Bootstrap();
-    private Channel channel;
 
     @Autowired
     private NettyClientHandler nettyClientHandler;
-    @Value("${rpc.server.address}")
-    private String serverAddress;
+    @Autowired
+    private ConnectionManager connectionManager;
 
     public NettyClient(){
             bootstrap.group(group)
@@ -57,19 +57,6 @@ public class NettyClient implements InitializingBean {
                 });
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        try {
-            HostAndPort hostAndPort = HostAndPort.fromString(serverAddress);
-            SocketAddress socketAddress = new InetSocketAddress(hostAndPort.getHostText(), hostAndPort.getPort());
-            ChannelFuture future = bootstrap.connect(socketAddress);
-            channel = future.sync().channel();
-        } catch (InterruptedException e) {
-            logger.error("与服务端{}建立连接发生异常",serverAddress, e);
-        }
-    }
-
-
     @PreDestroy
     public void destroy(){
         logger.info("RPC 客户端退出，释放资源");
@@ -84,6 +71,7 @@ public class NettyClient implements InitializingBean {
      * @throws InterruptedException
      */
     public Object send(RpcRequest request) throws InterruptedException{
+        Channel channel = connectionManager.chooseChannel();
         if(channel != null && channel.isActive()){
             logger.info("向服务端{}发送消息:{}", channel.remoteAddress(), JSON.toJSONString(request));
             SynchronousQueue<Object> resultQueue = nettyClientHandler.sendMessage(request, channel);
@@ -95,6 +83,12 @@ public class NettyClient implements InitializingBean {
             res.setCodeMsg(CodeMsgEnum.CHANNEL_EXCEPTION);
             return res;
         }
+    }
+
+    public Channel doConnect(SocketAddress socketAddress) throws InterruptedException {
+        ChannelFuture future = bootstrap.connect(socketAddress);
+        Channel channel = future.sync().channel();
+        return channel;
     }
 
 }
