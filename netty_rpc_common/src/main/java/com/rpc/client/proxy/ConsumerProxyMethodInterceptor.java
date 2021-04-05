@@ -1,7 +1,8 @@
-package com.rpc.client;
+package com.rpc.client.proxy;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.rpc.client.NettyClient;
 import com.rpc.common.CodeMsgEnum;
 import com.rpc.common.RpcRequest;
 import com.rpc.common.RpcResponse;

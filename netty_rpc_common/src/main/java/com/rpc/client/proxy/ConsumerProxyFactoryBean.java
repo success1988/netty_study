@@ -1,4 +1,4 @@
-package com.rpc.client;
+package com.rpc.client.proxy;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;

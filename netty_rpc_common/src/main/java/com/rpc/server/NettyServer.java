@@ -41,6 +41,7 @@ public class NettyServer implements ApplicationContextAware, InitializingBean {
     private String serverAddress;
 
 
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 
@@ -60,8 +61,10 @@ public class NettyServer implements ApplicationContextAware, InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        //启动netty服务端
         start();
     }
+
 
     public void start(){
 

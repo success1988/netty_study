@@ -1,7 +1,7 @@
 package com.rpc.registrar;
 
 import com.rpc.annotations.EnableRpcConsumer;
-import com.rpc.client.ConsumerProxyFactoryBean;
+import com.rpc.client.proxy.ConsumerProxyFactoryBean;
 import com.rpc.client.NettyClient;
 import com.rpc.util.ClazzScanner;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;

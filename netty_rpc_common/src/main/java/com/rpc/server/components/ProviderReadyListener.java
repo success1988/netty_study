@@ -1,9 +1,8 @@
-package com.rpc.server.listener;
+package com.rpc.server.components;
 
-import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.recipes.cache.TreeCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -20,19 +19,18 @@ public class ProviderReadyListener implements ApplicationListener<ApplicationRea
 
 
     private final Logger logger = LoggerFactory.getLogger(ProviderReadyListener.class);
-    /**
-     * Zk客户端
-     */
-    private CuratorFramework client = null;
-
-    private TreeCache treeCache;
+    @Autowired
+    private ServiceRegistry serviceRegistry;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        //服务注册：将当前服务节点的ip写入到注册中心
 
+        try {
+            serviceRegistry.doRegisterSelf();
+            logger.info("》》》》》服务提供方已经就绪！");
+        } catch (Exception e) {
+           logger.error("服务注册发生异常",e);
+        }
 
-
-        logger.error("》》》》》服务提供方已经就绪！");
     }
 }
