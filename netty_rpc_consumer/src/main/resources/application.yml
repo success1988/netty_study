@@ -6,4 +6,5 @@ rpc:
   server:
     address: localhost:19081
   registry:
-    address: localhost:2181
+    host: localhost:2181
+    path: /rpc/service/cluster

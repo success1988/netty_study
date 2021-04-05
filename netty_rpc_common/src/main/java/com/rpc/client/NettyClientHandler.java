@@ -1,6 +1,7 @@
 package com.rpc.client;
 
 import com.alibaba.fastjson.JSON;
+import com.rpc.client.connection.ConnectionManager;
 import com.rpc.common.RpcRequest;
 import com.rpc.common.RpcResponse;
 import io.netty.channel.Channel;
@@ -9,6 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -28,7 +30,8 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     private static final Logger logger = LoggerFactory.getLogger(NettyClientHandler.class);
 
     private ConcurrentSkipListMap<String, SynchronousQueue<Object>> queueMap = new ConcurrentSkipListMap<>();
-
+    @Autowired
+    private ConnectionManager connectionManager;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -39,6 +42,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         logger.info("已与RPC服务器断开连接.{}",ctx.channel().remoteAddress());
         ctx.channel().close();
+        connectionManager.removeChannel(ctx.channel());
     }
 
     /**

@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * @Title：
+ * @Title：连接管理器
  * @Author：wangchenggong
  * @Date 2021/4/5 12:42
  * @Description
@@ -42,7 +42,7 @@ public class ConnectionManager {
         return null;
     }
 
-    public synchronized void updateConnectServer(List<String> addressList) throws InterruptedException {
+    public synchronized void updateConnectServer(Set<String> addressList) throws InterruptedException {
         if(CollectionUtils.isEmpty(addressList)){
             closeAllServerChannels();
             throw new RuntimeException("没有可用的服务节点");
