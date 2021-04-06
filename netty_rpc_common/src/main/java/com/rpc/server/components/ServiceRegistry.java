@@ -1,10 +1,8 @@
 package com.rpc.server.components;
 
-import com.rpc.util.NetUtil;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.framework.recipes.cache.TreeCache;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
@@ -15,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * @Title：
+ * @Title：服务提供方的服务注册
  * @Author：wangchenggong
  * @Date 2021/4/5 11:25
  * @Description
@@ -36,20 +34,25 @@ public class ServiceRegistry implements InitializingBean {
     @Value("${rpc.registry.path}")
     private String registryPath;
 
-    private TreeCache treeCache;
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        connectRegistryServer();
+    }
 
+    /**
+     * 与注册中心建立连接
+     */
     private void connectRegistryServer() {
-        //与注册中心建立连接
         if(client==null) {
             RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
             client = CuratorFrameworkFactory.newClient(registryHost, retryPolicy);
             client.start();
-            logger.info("The CuratorFramework is connected! >>> {}", registryHost);
+            logger.info("service provider connected registry center! >>> {}", registryHost);
         }
     }
 
     /**
-     * 将自己注册到注册中心
+     * 将自己注册到注册中心，在服务提供方就绪后调用
      */
     public void doRegisterSelf() throws Exception{
         String serviceNodePath = this.registryPath+"/"+providerAddress;
@@ -61,8 +64,5 @@ public class ServiceRegistry implements InitializingBean {
         client.setData().forPath(serviceNodePath,serviceNodePath.getBytes("UTF-8"));
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        connectRegistryServer();
-    }
+
 }

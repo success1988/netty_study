@@ -41,7 +41,9 @@ public class ServiceDiscovery {
     private String registryPath;
     @Autowired
     private ConnectionManager connectionManager;
-    //初始化
+    /**
+     *     初始化
+     */
     @PostConstruct
     public void init() throws Exception {
         //与注册中心建立连接
@@ -58,7 +60,9 @@ public class ServiceDiscovery {
         getAndUpdateServiceConnection();
     }
 
-
+    /**
+     * 订阅服务子节点的变化
+     */
     private void doSubscribe(){
         try{
             if(client.checkExists().forPath(registryPath)==null) {
@@ -76,14 +80,17 @@ public class ServiceDiscovery {
                 }
             });
             treeCache.start();
-            logger.info("The consumer subScription is create success!-----------------");
+            logger.info("The consumer do subscribe  success!-----------------");
         }catch(Exception e){
-            logger.error("nodeListener", e);
+            logger.error("The consumer do subscribe exception", e);
         }
 
     }
 
-
+    /**
+     * 获取服务节点列表，并更新连接管理器中的连接列表
+     * @throws Exception
+     */
     private void getAndUpdateServiceConnection() throws Exception {
         List<String> serviceNodes = client.getChildren().forPath(registryPath);
         serviceAddressSet.addAll(serviceNodes);
